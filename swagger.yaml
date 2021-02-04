@@ -1,0 +1,267 @@
+openapi: 3.0.1
+info:
+  title: Skelbimai
+  version: v1.0
+servers:
+  - url: /
+security:
+  - default: []
+paths:
+  /pasiimtiskelbima:
+    get:
+      description: paduoda json faila
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vujobAds'
+        '400':
+          description: Nerastas failas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileNotFound'
+      security:
+        - default:
+            - cvonline
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+          - api_key
+          - basic_auth
+        optional: false
+  /skelbimai:
+    post:
+      description: issiuncia i vu skelbima ir iraso lokaliai cvonline'ui
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jobAds'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success'
+        '400':
+          description: Nepraejo validacijos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validate'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+          - api_key
+          - basic_auth
+        optional: false
+  /test/kandidatai:
+    post:
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: ok
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: null
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+          - api_key
+          - basic_auth
+        optional: false
+components:
+  schemas:
+    MultiRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          description: image file
+          format: binary
+        metadata:
+          $ref: '#/components/schemas/RequestMetadata'
+    RequestMetadata:
+      type: object
+      properties:
+        foo:
+          type: string
+      description: image metadata
+    validate:
+      properties:
+        Message:
+          type: string
+          example: Error validating data
+    success:
+      properties:
+        Message:
+          type: string
+          example: Success
+    FileNotFound:
+      properties:
+        Message:
+          type: string
+          example: File does not exist
+    vujobAds:
+      properties:
+        jobAds:
+          type: array
+          items:
+            properties:
+              adName:
+                type: string
+              adNumber:
+                type: integer
+              advantages:
+                type: string
+              categoryList:
+                type: string
+              documents:
+                type: string
+              lastChanged:
+                type: string
+              netSalary:
+                type: string
+              offer:
+                type: string
+              otherDuties:
+                type: string
+              position:
+                type: string
+              requirements:
+                type: string
+              validFrom:
+                type: string
+              validTo:
+                type: string
+              workDescription:
+                type: string
+    jobAds:
+      properties:
+        jobAds:
+          type: array
+          items:
+            properties:
+              adName:
+                type: string
+              adNumber:
+                type: number
+              advantages:
+                type: string
+              categoryList:
+                type: string
+              competences:
+                type: string
+              contacts:
+                type: string
+              countryList:
+                type: string
+              docAddress:
+                type: string
+              documents:
+                type: string
+              functions:
+                type: string
+              grossSalary:
+                type: number
+              jobadType:
+                type: number
+              language:
+                type: string
+              lastChanged:
+                type: string
+              logo:
+                type: string
+              netSalary:
+                type: string
+              offer:
+                type: string
+              otherDuties:
+                type: string
+              owner:
+                type: string
+              position:
+                type: string
+              postingChannels:
+                type: string
+              requirements:
+                type: string
+              state:
+                type: string
+              type:
+                type: string
+              typeState:
+                type: string
+              validFrom:
+                type: string
+              validText:
+                type: string
+              validTo:
+                type: string
+              waiting:
+                type: string
+              workAddress:
+                type: string
+              workDescription:
+                type: string
+              workTown:
+                type: string
+  securitySchemes:
+    default:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: ''
+          scopes:
+            cvonline: cvonline
+          x-scopes-bindings:
+            cvonline: Internal/cvonline
+x-wso2-auth-header: Authorization
+x-wso2-cors:
+  corsConfigurationEnabled: true
+  accessControlAllowOrigins:
+    - '*'
+  accessControlAllowCredentials: false
+  accessControlAllowHeaders:
+    - authorization
+    - Access-Control-Allow-Origin
+    - Content-Type
+    - SOAPAction
+    - apikey
+    - testKey
+  accessControlAllowMethods:
+    - GET
+    - POST
+x-wso2-production-endpoints:
+  urls:
+    - 'http://wso2is.itpc.vu.lt:8290/zivis-cvo-vu'
+  type: http
+x-wso2-sandbox-endpoints:
+  urls:
+    - 'http://wso2is.itpc.vu.lt:8290/zivis-cvo-vu'
+  type: http
+x-wso2-basePath: /skelbimai/v1.0
+x-wso2-transports:
+  - https
+x-wso2-response-cache:
+  enabled: false
+  cacheTimeoutInSeconds: 300
